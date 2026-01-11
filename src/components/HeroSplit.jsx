@@ -109,7 +109,7 @@ export default function HeroSplit() {
       </div>
 
       {/* ===== CONTENT CONTAINER ===== */}
-      <div className="relative z-10 flex flex-col md:flex-row h-full pt-20 md:pt-0">
+      <div className="relative z-20 flex flex-col md:flex-row h-full pt-20 md:pt-0">
         {/* ===== LEFT SIDE: WHAT WE DO ===== */}
         <div
           className="w-full h-1/2 md:h-full md:w-1/2 flex flex-col items-center justify-center cursor-pointer transition-all duration-1000 ease-out px-6"
@@ -190,7 +190,7 @@ export default function HeroSplit() {
 
       {/* ===== CENTER LOGO (ALL SIZES) ===== */}
       <div 
-        className="flex absolute top-1/2 left-1/2 z-20 pointer-events-none transition-all duration-1000 ease-out"
+        className="flex absolute top-1/2 left-1/2 z-10 pointer-events-none transition-all duration-1000 ease-out"
         style={{
           transform: hover === "left" 
             ? "translate(-70%, -50%)" 
@@ -199,7 +199,7 @@ export default function HeroSplit() {
             : "translate(-50%, -50%)"
         }}
       >
-        <div className="w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden shadow-2xl ring-4 ring-white/40 bg-white flex items-center justify-center">
+        <div className="size-[26vw] sm:size-[22vw] md:size-[18vw] lg:size-[16vw] min-w-36 min-h-36 max-w-80 max-h-80 rounded-full overflow-hidden shadow-2xl ring-4 ring-white/40 bg-white flex items-center justify-center">
           <div className="text-6xl font-bold text-gray-800"><img src="/imagenes/logo.png" alt="logo" /></div>
         </div>
       </div>

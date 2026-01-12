@@ -33,7 +33,7 @@ export default function HeroSplit() {
         </div>
       </header>
 
-      {/* ===== DESKTOP SPLIT CON IMÁGENES Y DIAGONAL ===== */}
+      {/* ===== DESKTOP SPLIT CON IMÁGENES Y DIAGONAL   redeploy===== */}
       <div className="hidden md:block absolute inset-0">
         {/* Lado izquierdo - Imagen + overlay morado */}
         <div className="absolute inset-0">

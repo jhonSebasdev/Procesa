@@ -26,12 +26,11 @@ export default function HeroSplit() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       {/* ===== HEADER ===== */}
-      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-6 md:p-8">
-        <button className="md:hidden text-white text-2xl">☰</button>
-        <div className="text-yellow-400 text-xl md:text-2xl font-bold tracking-wider">
+      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 md:p-6">
+        <button className="md:hidden text-white text-xl">☰</button>
+        <div className="text-yellow-400 text-lg md:text-xl font-bold tracking-wider">
           PROCESA
         </div>
-        
       </header>
 
       {/* ===== DESKTOP SPLIT CON IMÁGENES Y DIAGONAL ===== */}
@@ -109,10 +108,10 @@ export default function HeroSplit() {
       </div>
 
       {/* ===== CONTENT CONTAINER ===== */}
-      <div className="relative z-20 flex flex-col md:flex-row h-full pt-20 md:pt-0">
+      <div className="relative z-20 flex flex-col md:flex-row h-full pt-16 md:pt-0">
         {/* ===== LEFT SIDE: WHAT WE DO ===== */}
         <div
-          className="w-full h-1/2 md:h-full md:w-1/2 flex flex-col items-center justify-center cursor-pointer transition-all duration-1000 ease-out px-6"
+          className="w-full h-1/2 md:h-full md:w-1/2 flex flex-col items-center justify-center cursor-pointer transition-all duration-1000 ease-out px-4 md:px-6"
           style={{
             flex: hover === "left" ? "0 0 60%" : hover === "right" ? "0 0 40%" : "0 0 50%"
           }}
@@ -123,7 +122,7 @@ export default function HeroSplit() {
           <div className="text-center max-w-md">
             {/* Mobile: blanco, Desktop: blanco */}
             <h1 
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none tracking-tight mb-8 text-white md:text-white"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-none tracking-tight mb-4 md:mb-6 text-white md:text-white"
               style={{ 
                 fontFamily: 'system-ui, -apple-system, sans-serif',
                 textShadow: '0 2px 20px rgba(255, 255, 255, 0.1)',
@@ -132,7 +131,8 @@ export default function HeroSplit() {
               DISEÑO<br />INTERIOR
             </h1>
 
-            <button className="mt-4 px-8 py-3 border-2 border-white text-white text-xs sm:text-sm tracking-[0.2em] font-semibold hover:bg-white hover:text-[#5a4a7f] transition-all duration-300 uppercase rounded-full"
+            <button 
+              className="mt-2 md:mt-4 px-6 md:px-8 py-2 md:py-3 border-2 border-white text-white text-[10px] sm:text-xs tracking-[0.2em] font-semibold hover:bg-white hover:text-[#5a4a7f] transition-all duration-300 uppercase rounded-full"
               onClick={(e) => { e.stopPropagation(); navigate('/design'); }}
             >
               CONOCE NUESTROS PROYECTOS
@@ -142,7 +142,7 @@ export default function HeroSplit() {
 
         {/* ===== RIGHT SIDE: LATE===== */}
         <div
-          className="w-full h-1/2 md:h-full md:w-1/2 flex flex-col items-center justify-center cursor-pointer transition-all duration-1000 ease-out px-6"
+          className="w-full h-1/2 md:h-full md:w-1/2 flex flex-col items-center justify-center cursor-pointer transition-all duration-1000 ease-out px-4 md:px-6"
           style={{
             flex: hover === "right" ? "0 0 60%" : hover === "left" ? "0 0 40%" : "0 0 50%"
           }}
@@ -153,7 +153,7 @@ export default function HeroSplit() {
           <div className="text-center max-w-md">
             {/* Mobile y Desktop: marrón dorado */}
             <h1 
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none tracking-tight mb-8"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-none tracking-tight mb-4 md:mb-6"
               style={{ 
                 fontFamily: 'system-ui, -apple-system, sans-serif',
                 color: 'rgb(255, 255, 255)',
@@ -165,7 +165,7 @@ export default function HeroSplit() {
             </h1>
 
             <button 
-              className="mt-4 px-8 py-3 border-2 text-xs sm:text-sm tracking-[0.2em] font-semibold transition-all duration-300 uppercase rounded-full"
+              className="mt-2 md:mt-4 px-6 md:px-8 py-2 md:py-3 border-2 text-[10px] sm:text-xs tracking-[0.2em] font-semibold transition-all duration-300 uppercase rounded-full"
               style={{
                 borderColor: 'rgb(255, 255, 255)',
                 color: 'rgb(255, 255, 255)'
@@ -182,8 +182,6 @@ export default function HeroSplit() {
             >
               CONOCE NUESTROS PROYECTOS
             </button>
-            
-
           </div>
         </div>
       </div>
@@ -199,8 +197,10 @@ export default function HeroSplit() {
             : "translate(-50%, -50%)"
         }}
       >
-        <div className="size-[26vw] sm:size-[22vw] md:size-[18vw] lg:size-[16vw] min-w-36 min-h-36 max-w-80 max-h-80 rounded-full overflow-hidden shadow-2xl ring-4 ring-white/40 bg-white flex items-center justify-center">
-          <div className="text-6xl font-bold text-gray-800"><img src="/imagenes/logo.png" alt="logo" /></div>
+        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 xl:w-40 xl:h-40 rounded-full overflow-hidden shadow-2xl ring-4 ring-white/40 bg-white flex items-center justify-center">
+          <div className="text-6xl font-bold text-gray-800 w-full h-full flex items-center justify-center p-3">
+            <img className="w-[70%] h-[70%] object-contain" src="/imagenes/logo.png" alt="logo" />
+          </div>
         </div>
       </div>
     </motion.section>

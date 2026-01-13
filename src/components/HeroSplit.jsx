@@ -198,8 +198,8 @@ export default function HeroSplit() {
         }}
       >
         <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-36 lg:h-36 xl:w-40 xl:h-40 rounded-full overflow-hidden shadow-2xl ring-4 ring-white/40 bg-white flex items-center justify-center">
-          <div className="text-6xl font-bold text-gray-800 w-full h-full flex items-center justify-center p-3">
-            <img className="w-[70%] h-[70%] object-contain" src="/imagenes/logo.png" alt="logo" />
+          <div className="text-6xl font-bold text-gray-800 w-full h-full flex items-center justify-center p-1">
+            <img className="w-[94%] sm:w-[96%] md:w-[96%] lg:w-[97%] h-auto object-contain" src="/imagenes/logo.png" alt="logo" />
           </div>
         </div>
       </div>

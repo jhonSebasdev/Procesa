@@ -108,7 +108,7 @@ export default function Stands() {
     "/imagenes/amarillo.jpg",
   ];
   // Videos del héroe desde /public/videos
-  const heroVideos = ["/videos/intro.mp4"];
+  const heroVideos = ["/videos/intro.WEBM"];
   const initialHeroMedia = [...heroImages, ...heroVideos];
   const [heroMedia, setHeroMedia] = useState(initialHeroMedia);
   const [heroIdx, setHeroIdx] = useState(0);
@@ -185,7 +185,7 @@ export default function Stands() {
       .sort((a, b) => (b.images?.length ?? 0) - (a.images?.length ?? 0))
       .slice(0, 3)
       .map((p) => {
-        const imgs = (p.images || []).filter((src) => !/\.mp4$|\.webm$|\.ogg$|\.mov$/i.test(src));
+        const imgs = (p.images || []).filter((src) => !/\.webm$|\.mp4$|\.ogg$|\.mov$/i.test(src));
         const img = imgs.length ? imgs[Math.floor(Math.random() * imgs.length)] : "/imagenes/amarillo.jpg";
         return { project: p, img };
       });
@@ -523,7 +523,7 @@ export default function Stands() {
       {/* Video Stands (full screen en la mitad, entre Proyectos y Clientes) */}
       <motion.section id="video-stands" className="relative min-h-[100vh]" variants={fadeIn} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
         <div className="absolute inset-0">
-          <AutoplayVideo src="/imagenes/videos stands/0110.mp4" startAt={70} />
+          <AutoplayVideo src="/imagenes/videos stands/0110.WEBM" startAt={70} />
         </div>
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/30 to-transparent" />
       </motion.section>

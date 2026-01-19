@@ -99,17 +99,8 @@ export default function Stands() {
   const WHATSAPP_MESSAGE = "Hola! Quiero más información sobre stands.";
   const whatsappHref = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
-  // Imágenes del héroe tomadas desde /public/imagenes
-  // Agrega aquí más rutas si añades nuevas imágenes a esa carpeta
-  const heroImages = [
-    "/imagenes/BAIC AUTO SHOW GUAYAQUIL 2019/photo_4904563747221867386_y (1).jpg",
-    "/imagenes/derecha.png",
-    "/imagenes/derecha_amarillo.jpg",
-    "/imagenes/amarillo.jpg",
-  ];
-  // Videos del héroe desde /public/videos
-  const heroVideos = ["/videos/intro.WEBM"];
-  const initialHeroMedia = [...heroImages, ...heroVideos];
+  // Solo video en el hero (sin imágenes)
+  const initialHeroMedia = ["/videos/home_video_stands.mp4"];
   const [heroMedia, setHeroMedia] = useState(initialHeroMedia);
   const [heroIdx, setHeroIdx] = useState(0);
   const [awardLightboxIndex, setAwardLightboxIndex] = useState(null);
@@ -219,28 +210,11 @@ export default function Stands() {
     return () => window.removeEventListener("keydown", onKey);
   }, [awardLightboxIndex]);
 
-  // Héroe: aleatorizar orden inicial y autoplay tipo carrusel
+  // Solo un video, no necesita shuffle ni autoplay
   useEffect(() => {
-    // barajar medios para orden aleatorio
-    const shuffled = [...initialHeroMedia]
-      .map((m) => ({ m, r: Math.random() }))
-      .sort((a, b) => a.r - b.r)
-      .map(({ m }) => m);
-    setHeroMedia(shuffled);
+    setHeroMedia(initialHeroMedia);
     setHeroIdx(0);
-    // autoplay
-    const id = setInterval(() => {
-      setHeroIdx((prev) => (prev + 1) % shuffled.length);
-    }, 5000);
-    return () => clearInterval(id);
   }, []);
-
-  const nextHero = () => {
-    setHeroIdx((prev) => (prev + 1) % heroMedia.length);
-  };
-  const prevHero = () => {
-    setHeroIdx((prev) => (prev - 1 + heroMedia.length) % heroMedia.length);
-  };
 
   return (
     <main className="min-h-screen bg-[#0b0b0f] text-white">
@@ -321,9 +295,9 @@ export default function Stands() {
                         src={src}
                         className="w-full h-full object-cover"
                         autoPlay
-                        muted
                         loop
                         playsInline
+                        controls
                       />
                     );
                   }
@@ -343,47 +317,8 @@ export default function Stands() {
           </AnimatePresence>
         </div>
 
-        {/* Controles del carrusel */}
-        <div className="relative z-10 h-[calc(100vh-3.5rem)] flex items-end justify-center">
-          <div className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2">
-            <button
-              type="button"
-              onClick={prevHero}
-              aria-label="Anterior"
-              className="p-2 rounded-full bg-black/40 hover:bg-black/60 border border-white/20 text-white"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                <path fillRule="evenodd" d="M15.78 19.28a.75.75 0 0 1-1.06 0l-6-6a.75.75 0 0 1 0-1.06l6-6a.75.75 0 1 1 1.06 1.06L10.06 12l5.72 5.72c.3.3.3.77 0 1.06Z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-          <div className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2">
-            <button
-              type="button"
-              onClick={nextHero}
-              aria-label="Siguiente"
-              className="p-2 rounded-full bg-black/40 hover:bg-black/60 border border-white/20 text-white"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                <path fillRule="evenodd" d="M8.22 4.72a.75.75 0 0 1 1.06 0l6 6c.3.3.3.77 0 1.06l-6 6a.75.75 0 0 1-1.06-1.06L13.94 12 8.22 6.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-          <div className="mb-6 flex items-center gap-2 bg-black/30 px-3 py-1.5 rounded-full border border-white/10">
-            {heroMedia.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Ir al slide ${i + 1}`}
-                onClick={() => setHeroIdx(i)}
-                className={[
-                  "w-2.5 h-2.5 rounded-full transition-colors",
-                  i === heroIdx ? "bg-white" : "bg-white/40 hover:bg-white/70"
-                ].join(" ")}
-              />
-            ))}
-          </div>
-        </div>
+        {/* Sin controles ya que solo hay un video */}
+        <div className="relative z-10 h-[calc(100vh-3.5rem)]"></div>
       </section>
 
       {/* Testimonios y carrusel de logos */}
@@ -523,7 +458,7 @@ export default function Stands() {
       {/* Video Stands (full screen en la mitad, entre Proyectos y Clientes) */}
       <motion.section id="video-stands" className="relative min-h-[100vh]" variants={fadeIn} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
         <div className="absolute inset-0">
-          <AutoplayVideo src="/imagenes/videos stands/0110.WEBM" startAt={70} />
+          <AutoplayVideo src="/imagenes/videos stands/0110.mp4" startAt={70} />
         </div>
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/30 to-transparent" />
       </motion.section>

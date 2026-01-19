@@ -6,9 +6,20 @@ export default function TimelineExperience() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
   const timelineRef = useRef(null);
   
+  // Detectar si es móvil para optimizar rendimiento
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Scroll progress para toda la página
   const { scrollYProgress: pageScrollProgress } = useScroll({
     target: containerRef,
@@ -255,7 +266,15 @@ export default function TimelineExperience() {
   };
 
   return (
-    <main ref={containerRef} className="min-h-screen bg-gradient-to-b from-[#0a0a0f] via-[#0f0f14] to-[#14141a] text-white relative overflow-hidden">
+    <main 
+      ref={containerRef} 
+      className="min-h-screen bg-gradient-to-b from-[#0a0a0f] via-[#0f0f14] to-[#14141a] text-white relative overflow-hidden"
+      style={{ 
+        WebkitOverflowScrolling: 'touch',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden'
+      }}
+    >
       {/* Navbar */}
       <header
         className={[
@@ -280,8 +299,8 @@ export default function TimelineExperience() {
         </div>
       </header>
 
-      {/* Fondo geométrico animado - Intensidad reducida */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-70">
+      {/* Fondo geométrico animado - Intensidad reducida - Optimizado para móvil */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-70" style={{ willChange: 'transform' }}>
         {/* Capa de gradientes radiales animados */}
         <motion.div
           className="absolute w-[600px] h-[600px] rounded-full"
@@ -331,89 +350,101 @@ export default function TimelineExperience() {
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Formas geométricas grandes - opacidad reducida */}
-        <motion.div
-          className="absolute w-[500px] h-[500px] border border-yellow-400/15"
-          style={{ 
-            left: '10%', 
-            top: '15%',
-            transform: 'rotate(45deg)'
-          }}
-          animate={{ 
-            rotate: [45, 75, 45],
-            scale: [1, 1.15, 1],
-            borderColor: ['rgba(234, 179, 8, 0.15)', 'rgba(234, 179, 8, 0.25)', 'rgba(234, 179, 8, 0.15)']
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        />
+        {/* Formas geométricas grandes - simplificadas en móvil */}
+        {!isMobile && (
+          <>
+            <motion.div
+              className="absolute w-[500px] h-[500px] border border-yellow-400/15"
+              style={{ 
+                left: '10%', 
+                top: '15%',
+                transform: 'rotate(45deg)',
+                willChange: 'transform'
+              }}
+              animate={{ 
+                rotate: [45, 75, 45],
+                scale: [1, 1.15, 1],
+                borderColor: ['rgba(234, 179, 8, 0.15)', 'rgba(234, 179, 8, 0.25)', 'rgba(234, 179, 8, 0.15)']
+              }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            />
 
-        <motion.div
-          className="absolute w-[400px] h-[400px] border border-yellow-400/12"
-          style={{ 
-            right: '10%', 
-            top: '30%',
-            transform: 'rotate(30deg)'
-          }}
-          animate={{ 
-            rotate: [30, 60, 30],
-            scale: [1, 1.25, 1],
-            borderColor: ['rgba(234, 179, 8, 0.12)', 'rgba(234, 179, 8, 0.22)', 'rgba(234, 179, 8, 0.12)']
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        />
+            <motion.div
+              className="absolute w-[400px] h-[400px] border border-yellow-400/12"
+              style={{ 
+                right: '10%', 
+                top: '30%',
+                transform: 'rotate(30deg)',
+                willChange: 'transform'
+              }}
+              animate={{ 
+                rotate: [30, 60, 30],
+                scale: [1, 1.25, 1],
+                borderColor: ['rgba(234, 179, 8, 0.12)', 'rgba(234, 179, 8, 0.22)', 'rgba(234, 179, 8, 0.12)']
+              }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            />
 
-        {/* Círculos adicionales - opacidad reducida */}
-        <motion.div
-          className="absolute w-[350px] h-[350px] rounded-full border border-yellow-400/10"
-          style={{ 
-            left: '60%', 
-            top: '10%',
-          }}
-          animate={{ 
-            scale: [1, 1.3, 1],
-            opacity: [0.2, 0.4, 0.2],
-            borderColor: ['rgba(234, 179, 8, 0.1)', 'rgba(234, 179, 8, 0.2)', 'rgba(234, 179, 8, 0.1)']
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
+            {/* Círculos adicionales - opacidad reducida */}
+            <motion.div
+              className="absolute w-[350px] h-[350px] rounded-full border border-yellow-400/10"
+              style={{ 
+                left: '60%', 
+                top: '10%',
+                willChange: 'transform'
+              }}
+              animate={{ 
+                scale: [1, 1.3, 1],
+                opacity: [0.2, 0.4, 0.2],
+                borderColor: ['rgba(234, 179, 8, 0.1)', 'rgba(234, 179, 8, 0.2)', 'rgba(234, 179, 8, 0.1)']
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
 
-        <motion.div
-          className="absolute w-[300px] h-[300px] rounded-full border border-yellow-400/10"
-          style={{ 
-            left: '15%', 
-            bottom: '15%',
-          }}
-          animate={{ 
-            scale: [1, 1.4, 1],
-            opacity: [0.2, 0.4, 0.2],
-            borderColor: ['rgba(234, 179, 8, 0.1)', 'rgba(234, 179, 8, 0.25)', 'rgba(234, 179, 8, 0.1)']
-          }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
+            <motion.div
+              className="absolute w-[300px] h-[300px] rounded-full border border-yellow-400/10"
+              style={{ 
+                left: '15%', 
+                bottom: '15%',
+                willChange: 'transform'
+              }}
+              animate={{ 
+                scale: [1, 1.4, 1],
+                opacity: [0.2, 0.4, 0.2],
+                borderColor: ['rgba(234, 179, 8, 0.1)', 'rgba(234, 179, 8, 0.25)', 'rgba(234, 179, 8, 0.1)']
+              }}
+              transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            />
+          </>
+        )}
 
-        {/* Líneas diagonales decorativas - opacidad reducida */}
-        <motion.div
-          className="absolute h-[800px] w-[2px] bg-gradient-to-b from-transparent via-yellow-400/15 to-transparent"
-          style={{ left: '25%', top: '-10%', transform: 'rotate(15deg)' }}
-          animate={{ 
-            opacity: [0.2, 0.4, 0.2],
-            scaleY: [1, 1.2, 1]
-          }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        />
+        {/* Líneas diagonales decorativas - solo en desktop */}
+        {!isMobile && (
+          <>
+            <motion.div
+              className="absolute h-[800px] w-[2px] bg-gradient-to-b from-transparent via-yellow-400/15 to-transparent"
+              style={{ left: '25%', top: '-10%', transform: 'rotate(15deg)', willChange: 'transform, opacity' }}
+              animate={{ 
+                opacity: [0.2, 0.4, 0.2],
+                scaleY: [1, 1.2, 1]
+              }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            />
 
-        <motion.div
-          className="absolute h-[800px] w-[2px] bg-gradient-to-b from-transparent via-yellow-400/15 to-transparent"
-          style={{ right: '30%', top: '-10%', transform: 'rotate(-15deg)' }}
-          animate={{ 
-            opacity: [0.2, 0.4, 0.2],
-            scaleY: [1, 1.2, 1]
-          }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
+            <motion.div
+              className="absolute h-[800px] w-[2px] bg-gradient-to-b from-transparent via-yellow-400/15 to-transparent"
+              style={{ right: '30%', top: '-10%', transform: 'rotate(-15deg)', willChange: 'transform, opacity' }}
+              animate={{ 
+                opacity: [0.2, 0.4, 0.2],
+                scaleY: [1, 1.2, 1]
+              }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            />
+          </>
+        )}
         
-        {/* Partículas flotantes - opacidad reducida */}
-        {Array.from({ length: 40 }).map((_, i) => (
+        {/* Partículas flotantes - reducidas en móvil para mejor rendimiento */}
+        {Array.from({ length: isMobile ? 15 : 40 }).map((_, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full"
@@ -423,7 +454,8 @@ export default function TimelineExperience() {
               width: i % 3 === 0 ? '3px' : '2px',
               height: i % 3 === 0 ? '3px' : '2px',
               backgroundColor: 'rgba(234, 179, 8, 0.25)',
-              boxShadow: '0 0 8px rgba(234, 179, 8, 0.3)'
+              boxShadow: isMobile ? 'none' : '0 0 8px rgba(234, 179, 8, 0.3)',
+              willChange: 'transform, opacity'
             }}
             animate={{ 
               y: [0, -40, 0],
@@ -439,14 +471,15 @@ export default function TimelineExperience() {
           />
         ))}
 
-        {/* Estrellas brillantes - opacidad reducida */}
-        {Array.from({ length: 15 }).map((_, i) => (
+        {/* Estrellas brillantes - reducidas en móvil */}
+        {!isMobile && Array.from({ length: 15 }).map((_, i) => (
           <motion.div
             key={`star-${i}`}
             className="absolute"
             style={{
               left: `${(i * 47 + 20) % 100}%`,
               top: `${(i * 67 + 15) % 100}%`,
+              willChange: 'transform, opacity'
             }}
             animate={{
               opacity: [0, 0.6, 0],
@@ -474,6 +507,7 @@ export default function TimelineExperience() {
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={scrollToTop}
             className="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center shadow-2xl shadow-yellow-500/40 hover:shadow-yellow-500/60 transition-all hover:scale-110 group"
+            style={{ willChange: 'transform, opacity' }}
           >
             <svg 
               className="w-6 h-6 text-black group-hover:-translate-y-1 transition-transform" 
@@ -591,7 +625,7 @@ export default function TimelineExperience() {
               strokeDasharray="10 5"
             />
             
-            {/* Línea de glow que crece con el scroll */}
+            {/* Línea de glow que crece con el scroll - sin filtro en móvil para mejor rendimiento */}
             <motion.path
               d={milestones.map((_, index) => {
                 const y = index * 550 + 275;
@@ -609,7 +643,7 @@ export default function TimelineExperience() {
               strokeLinecap="round"
               strokeLinejoin="round"
               opacity="0.4"
-              filter="url(#glow)"
+              filter={isMobile ? 'none' : 'url(#glow)'}
               initial={{ pathLength: 0 }}
               style={{ 
                 pathLength: scrollYProgress
@@ -887,18 +921,25 @@ export default function TimelineExperience() {
 
 // Componente para cada nodo de la timeline
 function TimelineNode({ milestone, index, isSelected, onSelect }) {
+  const [isMobile, setIsMobile] = useState(false);
   const nodeRef = useRef(null);
+  
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: nodeRef,
     offset: ["start end", "center center"]
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 1]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 1]); // Menos escala en entrada
+  // Simplificar movimiento horizontal en móvil
   const x = useTransform(
     scrollYProgress, 
     [0, 0.5, 1], 
-    milestone.side === 'left' ? [-100, 0, 0] : [100, 0, 0]
+    isMobile ? [0, 0, 0] : (milestone.side === 'left' ? [-100, 0, 0] : [100, 0, 0])
   );
 
   return (
@@ -915,9 +956,10 @@ function TimelineNode({ milestone, index, isSelected, onSelect }) {
         style={{ x }}
       >
         <motion.div
-          className="inline-block overflow-hidden rounded-3xl bg-gradient-to-br from-[#1a1a24]/90 to-[#0f0f14]/90 border border-yellow-400/20 hover:border-yellow-400/40 transition-all backdrop-blur-sm group cursor-pointer max-w-2xl"
-          whileHover={{ scale: 1.05, borderColor: 'rgba(234, 179, 8, 0.6)' }}
+          className={`inline-block overflow-hidden rounded-3xl bg-gradient-to-br from-[#1a1a24]/90 to-[#0f0f14]/90 border border-yellow-400/20 hover:border-yellow-400/40 transition-all ${!isMobile ? 'backdrop-blur-sm' : ''} group cursor-pointer max-w-2xl`}
+          whileHover={!isMobile ? { scale: 1.05, borderColor: 'rgba(234, 179, 8, 0.6)' } : {}}
           onClick={onSelect}
+          style={{ willChange: isMobile ? 'auto' : 'transform' }}
         >
           {/* Imagen del proyecto */}
           {milestone.image ? (
@@ -926,8 +968,10 @@ function TimelineNode({ milestone, index, isSelected, onSelect }) {
                 src={milestone.image}
                 alt={milestone.title}
                 className="w-full h-full object-cover"
-                whileHover={{ scale: 1.1 }}
+                whileHover={!isMobile ? { scale: 1.1 } : {}}
                 transition={{ duration: 0.4 }}
+                loading="lazy"
+                style={{ willChange: isMobile ? 'auto' : 'transform' }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f14] via-transparent to-transparent opacity-60" />
               

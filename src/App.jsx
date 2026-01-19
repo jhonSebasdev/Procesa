@@ -6,6 +6,7 @@ import TimelineExperience from "./sections/TimelineExperience";
 import HeroSplit from "./components/HeroSplit";
 import ProjectDetail from "./sections/ProjectDetail";
 import Design from "./sections/Design";
+import IndustriasVintage from "./sections/IndustriasVintage";
 
 function App() {
   function Analytics() {
@@ -41,6 +42,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeWithIntro />} />
         <Route path="/design" element={<Design />} />
+        <Route path="/design/vintage" element={<IndustriasVintage />} />
         <Route path="/stands" element={<Stands />} />
         <Route path="/stands/timeline" element={<TimelineExperience />} />
         <Route path="/stands/project/:slug" element={<ProjectDetail />} />

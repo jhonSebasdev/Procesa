@@ -381,13 +381,38 @@ export default function Stands() {
     // Primero intenta reproducir con sonido
     video.muted = false;
     video.play()
+      .then(() => {
+        // Si el video se reproduce con sonido, actualizar estado
+        setIsMuted(false);
+      })
       .catch(() => {
         // Si el navegador bloquea, reproduce sin sonido
         video.muted = true;
         setIsMuted(true);
-        video.play();
+        video.play().catch(() => {});
       });
   }, []);
+
+  // Bloquear scroll cuando el modal de premios está abierto
+  useEffect(() => {
+    if (awardLightboxIndex !== null) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      
+      // Calcular ancho del scrollbar
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Bloquear scroll y compensar el ancho del scrollbar
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+      return () => {
+        // Restaurar estilos originales
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [awardLightboxIndex]);
 
   // Función para alternar sonido
   const toggleMute = () => {
@@ -400,17 +425,18 @@ export default function Stands() {
   // ==================== RENDER ====================
   
   return (
-    <main 
-      ref={containerRef}
-      className="min-h-screen bg-gradient-to-b from-[#0a0a0f] via-[#0b0b0f] to-[#0f0f14] text-white relative overflow-hidden"
-      style={{
-        WebkitOverflowScrolling: 'touch',
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden'
-      }}
-    >
-      {/* Fondo animado */}
-      <AnimatedBackground isMobile={isMobile} />
+    <>
+      <main 
+        ref={containerRef}
+        className="min-h-screen bg-gradient-to-b from-[#0a0a0f] via-[#0b0b0f] to-[#0f0f14] text-white relative overflow-hidden"
+        style={{
+          WebkitOverflowScrolling: 'touch',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden'
+        }}
+      >
+        {/* Fondo animado */}
+        <AnimatedBackground isMobile={isMobile} />
       {/* ==================== NAVEGACIÓN ==================== */}
       <motion.header
         className={[
@@ -566,6 +592,8 @@ export default function Stands() {
                           ref={videoRef}
                           src={src}
                           className="w-full h-full object-cover"
+                          autoPlay
+                          muted
                           loop
                           playsInline
                           style={{ filter: 'brightness(0.7)' }}
@@ -1152,75 +1180,6 @@ export default function Stands() {
           </motion.div>
         </div>
       </motion.section>
-      {/* Lightbox de premios */}
-      <AnimatePresence>
-        {awardLightboxIndex !== null && (
-          <motion.div
-            className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setAwardLightboxIndex(null)}
-          >
-            <div className="relative max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
-              {/* Botón cerrar */}
-              <motion.button
-                onClick={() => setAwardLightboxIndex(null)}
-                className="absolute -top-12 right-0 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white text-sm font-semibold transition-all flex items-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                Cerrar
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </motion.button>
-
-              {/* Contenedor de imagen */}
-              <motion.div 
-                className="relative rounded-2xl overflow-hidden border-2 border-yellow-400/30 bg-black shadow-2xl"
-                initial={{ scale: 0.9, y: 40 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 40 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <img
-                  src={premiosImages[awardLightboxIndex ?? 0]}
-                  alt="reconocimiento"
-                  className="w-full h-[70vh] object-contain"
-                />
-
-                {/* Controles de navegación */}
-                <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4">
-                  <motion.button
-                    className="w-12 h-12 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/30 text-white text-xl font-bold"
-                    onClick={() => setAwardLightboxIndex((i) => (i - 1 + premiosImages.length) % premiosImages.length)}
-                    whileHover={{ scale: 1.1, x: -5 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    ‹
-                  </motion.button>
-                  <motion.button
-                    className="w-12 h-12 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/30 text-white text-xl font-bold"
-                    onClick={() => setAwardLightboxIndex((i) => (i + 1) % premiosImages.length)}
-                    whileHover={{ scale: 1.1, x: 5 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    ›
-                  </motion.button>
-                </div>
-
-                {/* Contador */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/30 text-white text-sm font-semibold">
-                  {(awardLightboxIndex ?? 0) + 1} / {premiosImages.length}
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
 
 
@@ -1456,7 +1415,91 @@ export default function Stands() {
           100% { transform: translateY(0); }
         }
       `}</style>
-    </main>
+      </main>
+
+      {/* ==================== MODAL DE PREMIOS (FUERA DEL MAIN) ==================== */}
+      <AnimatePresence mode="wait">
+        {awardLightboxIndex !== null && (
+          <motion.div
+            className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-md flex items-center justify-center p-4"
+            style={{ 
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              pointerEvents: 'auto'
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setAwardLightboxIndex(null)}
+          >
+            <motion.div 
+              className="relative max-w-5xl w-full" 
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {/* Botón cerrar */}
+              <motion.button
+                onClick={() => setAwardLightboxIndex(null)}
+                className="absolute -top-14 right-0 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-semibold transition-all flex items-center gap-2 shadow-xl"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Cerrar
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </motion.button>
+
+              {/* Contenedor de imagen */}
+              <div className="relative rounded-2xl overflow-hidden border-2 border-yellow-400/40 bg-black shadow-2xl">
+                <img
+                  src={premiosImages[awardLightboxIndex ?? 0]}
+                  alt="reconocimiento"
+                  className="w-full h-[75vh] md:h-[80vh] object-contain"
+                />
+
+                {/* Controles de navegación */}
+                <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4">
+                  <motion.button
+                    className="w-14 h-14 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md border-2 border-white/40 text-white text-2xl font-bold shadow-xl"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAwardLightboxIndex((i) => (i - 1 + premiosImages.length) % premiosImages.length);
+                    }}
+                    whileHover={{ scale: 1.1, x: -5 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    ‹
+                  </motion.button>
+                  <motion.button
+                    className="w-14 h-14 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md border-2 border-white/40 text-white text-2xl font-bold shadow-xl"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAwardLightboxIndex((i) => (i + 1) % premiosImages.length);
+                    }}
+                    whileHover={{ scale: 1.1, x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    ›
+                  </motion.button>
+                </div>
+
+                {/* Contador */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-full bg-black/70 backdrop-blur-md border-2 border-white/40 text-white font-semibold shadow-xl">
+                  {(awardLightboxIndex ?? 0) + 1} / {premiosImages.length}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

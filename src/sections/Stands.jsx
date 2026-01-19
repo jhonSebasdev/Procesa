@@ -92,6 +92,8 @@ export default function Stands() {
   const [scrolled, setScrolled] = useState(false);
   const [projectIndex, setProjectIndex] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef(null);
   const navigate = useNavigate();
 
   // WhatsApp: ajusta el número con código de país y el mensaje si lo deseas
@@ -216,6 +218,30 @@ export default function Stands() {
     setHeroIdx(0);
   }, []);
 
+  // Autoplay inteligente: intenta con sonido, si falla reproduce sin sonido
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    
+    // Primero intenta reproducir con sonido
+    video.muted = false;
+    video.play()
+      .catch(() => {
+        // Si el navegador bloquea, reproduce sin sonido
+        video.muted = true;
+        setIsMuted(true);
+        video.play();
+      });
+  }, []);
+
+  // Función para alternar sonido
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#0b0b0f] text-white">
       {/* Nav (transparente/solida) */}
@@ -291,14 +317,26 @@ export default function Stands() {
                   const isVideo = /\.mp4$|\.webm$|\.ogg$/i.test(src) || src.includes("/videos/");
                   if (isVideo) {
                     return (
-                      <video
-                        src={src}
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        loop
-                        playsInline
-                        controls
-                      />
+                      <>
+                        <video
+                          ref={videoRef}
+                          src={src}
+                          className="w-full h-full object-cover"
+                          loop
+                          playsInline
+                        />
+                        
+                        {/* Botón de sonido flotante */}
+                        <button
+                          onClick={toggleMute}
+                          className="absolute bottom-6 left-6 z-20 p-3 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm border border-white/30 transition-all hover:scale-110 shadow-lg"
+                          aria-label={isMuted ? "Activar sonido" : "Desactivar sonido"}
+                        >
+                          <span className="text-2xl">
+                            {isMuted ? "🔇" : "🔊"}
+                          </span>
+                        </button>
+                      </>
                     );
                   }
                   return (

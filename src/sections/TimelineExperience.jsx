@@ -9,6 +9,14 @@ export default function TimelineExperience() {
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
   const timelineRef = useRef(null);
+
+  // Debug: ver cuando cambia selectedNode
+  useEffect(() => {
+    console.log('selectedNode cambió a:', selectedNode);
+    if (selectedNode !== null) {
+      console.log('Proyecto seleccionado:', milestones[selectedNode]);
+    }
+  }, [selectedNode]);
   
   // Detectar si es móvil para optimizar rendimiento
   useEffect(() => {
@@ -19,6 +27,20 @@ export default function TimelineExperience() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Bloquear scroll del body cuando el modal está abierto
+  useEffect(() => {
+    if (selectedNode !== null) {
+      // Bloquear scroll de forma simple
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restaurar scroll cuando se cierra el modal
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [selectedNode]);
 
   // Scroll progress para toda la página
   const { scrollYProgress: pageScrollProgress } = useScroll({
@@ -266,15 +288,16 @@ export default function TimelineExperience() {
   };
 
   return (
-    <main 
-      ref={containerRef} 
-      className="min-h-screen bg-gradient-to-b from-[#0a0a0f] via-[#0f0f14] to-[#14141a] text-white relative overflow-hidden"
-      style={{ 
-        WebkitOverflowScrolling: 'touch',
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden'
-      }}
-    >
+    <>
+      <main 
+        ref={containerRef} 
+        className="min-h-screen bg-gradient-to-b from-[#0a0a0f] via-[#0f0f14] to-[#14141a] text-white relative overflow-hidden"
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden'
+        }}
+      >
       {/* Navbar */}
       <header
         className={[
@@ -564,8 +587,12 @@ export default function TimelineExperience() {
         <div className="max-w-6xl mx-auto relative">
           {/* Línea vertical en zig-zag (solo visible en desktop) - 24 proyectos */}
           <svg
-            className="absolute left-0 right-0 top-0 bottom-0 hidden md:block pointer-events-none z-0"
-            style={{ height: '100%', minHeight: `${milestones.length * 550}px` }}
+            className="absolute left-0 right-0 top-0 bottom-0 hidden md:block z-0"
+            style={{ 
+              height: '100%', 
+              minHeight: `${milestones.length * 550}px`,
+              pointerEvents: 'none'
+            }}
             viewBox={`0 0 1200 ${milestones.length * 550}`}
             preserveAspectRatio="xMidYMid meet"
           >
@@ -744,14 +771,19 @@ export default function TimelineExperience() {
           </div>
 
           {/* Milestones */}
-          <div className="space-y-32 md:space-y-48 relative z-10">
+          <div className="space-y-32 md:space-y-48 relative z-10" style={{ pointerEvents: 'auto' }}>
             {milestones.map((milestone, index) => (
               <TimelineNode
                 key={index}
                 milestone={milestone}
                 index={index}
                 isSelected={selectedNode === index}
-                onSelect={() => setSelectedNode(selectedNode === index ? null : index)}
+                onSelect={() => {
+                  console.log('onSelect llamado para index:', index);
+                  const newValue = selectedNode === index ? null : index;
+                  console.log('Cambiando selectedNode a:', newValue);
+                  setSelectedNode(newValue);
+                }}
               />
             ))}
           </div>
@@ -827,95 +859,121 @@ export default function TimelineExperience() {
           </motion.div>
         </div>
       </div>
+      </main>
 
-      {/* Modal de detalles */}
-      <AnimatePresence>
+      {/* Modal de detalles - FUERA del contenedor principal */}
+      <AnimatePresence mode="wait">
         {selectedNode !== null && (
           <motion.div
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+            style={{
+              zIndex: 99999,
+              pointerEvents: 'auto'
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedNode(null)}
+            onClick={() => {
+              console.log('Cerrando modal desde backdrop');
+              setSelectedNode(null);
+            }}
           >
             <motion.div
               className="bg-gradient-to-br from-[#1a1a24] via-[#14141a] to-[#0a0a0f] rounded-3xl max-w-4xl w-full border-2 border-yellow-400/40 shadow-2xl shadow-yellow-500/20 relative overflow-hidden"
-              initial={{ scale: 0.8, y: 50, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.8, y: 50, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxHeight: '90vh',
+                pointerEvents: 'auto'
+              }}
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log('Click dentro del modal');
+              }}
             >
               {/* Efecto de brillo */}
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 to-transparent pointer-events-none" />
               
-              {/* Imagen grande del proyecto */}
-              {milestones[selectedNode]?.image ? (
-                <div className="relative w-full h-64 md:h-96 overflow-hidden">
-                  <img
-                    src={milestones[selectedNode]?.image}
-                    alt={milestones[selectedNode]?.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a24] via-transparent to-transparent opacity-80" />
-                  
-                  {/* Icono y año flotante */}
-                  <div className="absolute top-6 left-6 flex items-center gap-3">
-                    <div className="text-5xl md:text-6xl filter drop-shadow-lg">
+              {/* Contenedor con scroll interno */}
+              <div className="overflow-y-auto" style={{ maxHeight: '90vh' }}>
+                {/* Imagen grande del proyecto */}
+                {milestones[selectedNode]?.image ? (
+                  <div className="relative w-full h-64 md:h-96 overflow-hidden">
+                    <img
+                      src={milestones[selectedNode]?.image}
+                      alt={milestones[selectedNode]?.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a24] via-transparent to-transparent opacity-80" />
+                    
+                    {/* Icono y año flotante */}
+                    <div className="absolute top-6 left-6 flex items-center gap-3">
+                      <div className="text-5xl md:text-6xl filter drop-shadow-lg">
+                        {milestones[selectedNode]?.icon}
+                      </div>
+                      <div className="px-4 py-2 bg-yellow-400/90 backdrop-blur-sm rounded-lg">
+                        <span className="text-black font-bold text-xl md:text-2xl">
+                          {milestones[selectedNode]?.year}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* Header sin imagen para el modal */
+                  <div className="relative w-full bg-gradient-to-br from-yellow-400/15 via-yellow-500/10 to-transparent p-10 md:p-16 text-center border-b border-yellow-400/20">
+                    <div className="text-7xl md:text-8xl mb-6 filter drop-shadow-2xl">
                       {milestones[selectedNode]?.icon}
                     </div>
-                    <div className="px-4 py-2 bg-yellow-400/90 backdrop-blur-sm rounded-lg">
-                      <span className="text-black font-bold text-xl md:text-2xl">
-                        {milestones[selectedNode]?.year}
-                      </span>
+                    <div className="inline-block px-8 py-4 bg-yellow-400/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-yellow-500/30">
+                      <span className="text-black font-bold text-3xl md:text-4xl">{milestones[selectedNode]?.year}</span>
                     </div>
                   </div>
-                </div>
-              ) : (
-                /* Header sin imagen para el modal */
-                <div className="relative w-full bg-gradient-to-br from-yellow-400/15 via-yellow-500/10 to-transparent p-10 md:p-16 text-center border-b border-yellow-400/20">
-                  <div className="text-7xl md:text-8xl mb-6 filter drop-shadow-2xl">
-                    {milestones[selectedNode]?.icon}
-                  </div>
-                  <div className="inline-block px-8 py-4 bg-yellow-400/95 backdrop-blur-sm rounded-2xl shadow-xl shadow-yellow-500/30">
-                    <span className="text-black font-bold text-3xl md:text-4xl">{milestones[selectedNode]?.year}</span>
-                  </div>
-                </div>
-              )}
-              
-              {/* Contenido de texto */}
-              <div className="relative z-10 p-6 md:p-10">
-                <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-yellow-400 mb-3">
-                  {milestones[selectedNode]?.title}
-                </div>
-                <div className="text-lg md:text-xl text-yellow-300/90 mb-4 font-semibold">
-                  {milestones[selectedNode]?.desc}
-                </div>
-                <div className="text-base md:text-lg text-white/80 mb-8 leading-relaxed">
-                  {milestones[selectedNode]?.details}
-                </div>
+                )}
                 
-                {/* Botones */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={() => setSelectedNode(null)}
-                    className="flex-1 sm:flex-none px-8 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-yellow-500/50 hover:scale-105"
-                  >
-                    Cerrar
-                  </button>
-                  <button
-                    onClick={() => setSelectedNode(null)}
-                    className="flex-1 sm:flex-none px-8 py-3 rounded-xl border-2 border-yellow-400/50 text-yellow-400 font-bold hover:bg-yellow-400/10 transition-all hover:scale-105"
-                  >
-                    Ver más proyectos
-                  </button>
+                {/* Contenido de texto */}
+                <div className="relative z-10 p-6 md:p-10">
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-yellow-400 mb-3">
+                    {milestones[selectedNode]?.title}
+                  </div>
+                  <div className="text-lg md:text-xl text-yellow-300/90 mb-4 font-semibold">
+                    {milestones[selectedNode]?.desc}
+                  </div>
+                  <div className="text-base md:text-lg text-white/80 mb-8 leading-relaxed">
+                    {milestones[selectedNode]?.details}
+                  </div>
+                  
+                  {/* Botones */}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('Botón Cerrar clickeado');
+                        setSelectedNode(null);
+                      }}
+                      className="flex-1 sm:flex-none px-8 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-yellow-500/50 active:scale-95 hover:scale-105"
+                    >
+                      Cerrar
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('Ver más proyectos');
+                        setSelectedNode(null);
+                      }}
+                      className="flex-1 sm:flex-none px-8 py-3 rounded-xl border-2 border-yellow-400/50 text-yellow-400 font-bold hover:bg-yellow-400/10 transition-all active:scale-95 hover:scale-105"
+                    >
+                      Ver más proyectos
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </main>
+    </>
   );
 }
 
@@ -952,13 +1010,18 @@ function TimelineNode({ milestone, index, isSelected, onSelect }) {
     >
       {/* Contenido del milestone */}
       <motion.div
-        className={`flex-1 ${milestone.side === 'left' ? 'md:text-right' : 'md:text-left'} text-center`}
+        className={`flex-1 ${milestone.side === 'left' ? 'md:text-right' : 'md:text-left'} text-center relative z-20`}
         style={{ x }}
       >
         <motion.div
           className={`inline-block overflow-hidden rounded-3xl bg-gradient-to-br from-[#1a1a24]/90 to-[#0f0f14]/90 border border-yellow-400/20 hover:border-yellow-400/40 transition-all ${!isMobile ? 'backdrop-blur-sm' : ''} group cursor-pointer max-w-2xl`}
           whileHover={!isMobile ? { scale: 1.05, borderColor: 'rgba(234, 179, 8, 0.6)' } : {}}
-          onClick={onSelect}
+          whileTap={{ scale: 0.98 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log('Click en proyecto:', index);
+            onSelect();
+          }}
           style={{ willChange: isMobile ? 'auto' : 'transform' }}
         >
           {/* Imagen del proyecto */}

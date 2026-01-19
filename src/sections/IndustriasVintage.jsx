@@ -55,6 +55,11 @@ export default function IndustriasVintage() {
 
   // ==================== EFFECTS ====================
   
+  // Scroll al inicio cuando se carga la página
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   // Detectar móvil
   useEffect(() => {
     const checkMobile = () => {
@@ -283,14 +288,14 @@ export default function IndustriasVintage() {
             
             <motion.button
               onClick={toggleMute}
-              className="absolute bottom-8 left-8 z-20 p-4 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-amber-600/30 transition-all shadow-xl"
+              className="absolute bottom-4 left-4 md:bottom-8 md:left-8 z-20 p-3 md:p-4 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-amber-600/30 transition-all shadow-xl"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.6 }}
             >
-              <span className="text-2xl">
+              <span className="text-xl md:text-2xl">
                 {isMuted ? "🔇" : "🔊"}
               </span>
             </motion.button>
@@ -299,22 +304,22 @@ export default function IndustriasVintage() {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-amber-950/40 via-transparent to-amber-950/40" />
           </div>
 
-          <div className="relative z-10 px-6 py-20 md:py-32">
+          <div className="relative z-10 px-4 sm:px-6 py-16 sm:py-20 md:py-32">
             <div className="max-w-5xl mx-auto text-center">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.3 }}
               >
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 leading-tight px-2">
                   <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-transparent">
                     Industrias Vintage
                   </span>
                 </h1>
-                <p className="text-2xl sm:text-3xl md:text-4xl text-amber-100 mb-6 font-semibold">
+                <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-amber-100 mb-4 sm:mb-6 font-semibold px-2">
                   Diseño de Interiores con Alma
                 </p>
-                <p className="text-base sm:text-lg text-white/80 max-w-3xl mx-auto mb-12 leading-relaxed">
+                <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4">
                   Especializados en remodelación de interiores con acabados vintage. 
                   Muebles de época, acabados artesanales, lámparas retro y mobiliario único 
                   para darle a tu hogar ese encanto nostálgico que solo lo vintage puede ofrecer.
@@ -322,14 +327,14 @@ export default function IndustriasVintage() {
               </motion.div>
 
               <motion.div 
-                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.6 }}
               >
                 <motion.a
                   href="#proyectos"
-                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold hover:from-amber-500 hover:to-amber-600 transition-all shadow-2xl shadow-amber-600/30"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold hover:from-amber-500 hover:to-amber-600 transition-all shadow-2xl shadow-amber-600/30 text-center"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -337,7 +342,7 @@ export default function IndustriasVintage() {
                 </motion.a>
                 <motion.a
                   href="#contacto"
-                  className="px-8 py-4 rounded-xl border-2 border-amber-600/50 text-amber-200 font-bold hover:bg-amber-900/30 backdrop-blur-sm transition-all"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl border-2 border-amber-600/50 text-amber-200 font-bold hover:bg-amber-900/30 backdrop-blur-sm transition-all text-center"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -368,7 +373,7 @@ export default function IndustriasVintage() {
         {/* ==================== SERVICIOS ==================== */}
         <motion.section 
           id="servicios"
-          className="relative px-6 md:px-10 lg:px-16 py-20 md:py-28"
+          className="relative px-4 sm:px-6 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 lg:py-28"
           variants={stagger}
           initial="hidden"
           whileInView="show"
@@ -384,7 +389,7 @@ export default function IndustriasVintage() {
               </motion.p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {[
                 { 
                   icon: "✨", 
@@ -410,12 +415,12 @@ export default function IndustriasVintage() {
                 <motion.div
                   key={i}
                   variants={fadeInUp}
-                  className="p-8 rounded-2xl bg-gradient-to-br from-amber-900/20 to-transparent border border-amber-600/20 hover:border-amber-600/40 transition-all group"
-                  whileHover={{ y: -10, scale: 1.02 }}
+                  className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-amber-900/20 to-transparent border border-amber-600/20 hover:border-amber-600/40 transition-all group"
+                  whileHover={!isMobile ? { y: -10, scale: 1.02 } : {}}
                 >
-                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">{service.icon}</div>
-                  <div className="text-xl font-bold text-amber-200 mb-3">{service.title}</div>
-                  <p className="text-white/70 leading-relaxed">{service.desc}</p>
+                  <div className="text-5xl sm:text-6xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform">{service.icon}</div>
+                  <div className="text-lg sm:text-xl font-bold text-amber-200 mb-2 sm:mb-3">{service.title}</div>
+                  <p className="text-sm sm:text-base text-white/70 leading-relaxed">{service.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -425,7 +430,7 @@ export default function IndustriasVintage() {
         {/* ==================== VIDEOS DE PROYECTOS ==================== */}
         <motion.section 
           id="proyectos"
-          className="relative px-6 md:px-10 lg:px-16 py-20 md:py-28 bg-gradient-to-b from-amber-950/10 to-transparent"
+          className="relative px-4 sm:px-6 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 lg:py-28 bg-gradient-to-b from-amber-950/10 to-transparent"
           variants={stagger}
           initial="hidden"
           whileInView="show"
@@ -441,13 +446,13 @@ export default function IndustriasVintage() {
               </motion.p>
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {vintageVideos.map((video, i) => (
                 <motion.div
                   key={i}
                   variants={fadeInUp}
-                  className="group relative rounded-2xl overflow-hidden border border-amber-600/20 hover:border-amber-600/40 transition-all cursor-pointer"
-                  whileHover={{ y: -10, scale: 1.02 }}
+                  className="group relative rounded-xl sm:rounded-2xl overflow-hidden border border-amber-600/20 hover:border-amber-600/40 transition-all cursor-pointer"
+                  whileHover={!isMobile ? { y: -10, scale: 1.02 } : {}}
                   onClick={() => setSelectedMedia({ type: 'video', src: video })}
                 >
                   <div className="relative aspect-video">
@@ -481,12 +486,12 @@ export default function IndustriasVintage() {
         {/* ==================== GALERÍA DINÁMICA COMPLETA ==================== */}
         <motion.section 
           id="galeria"
-          className="relative py-20 md:py-28"
+          className="relative py-12 sm:py-16 md:py-20 lg:py-28"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.1 }}
         >
-          <div className="max-w-[2000px] mx-auto px-4 md:px-6">
+          <div className="max-w-[2000px] mx-auto px-3 sm:px-4 md:px-6">
             <motion.div 
               variants={fadeIn} 
               className="text-center mb-12 px-4"
@@ -506,14 +511,14 @@ export default function IndustriasVintage() {
             </motion.div>
 
             {/* Grid dinámico estilo masonry */}
-            <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5 gap-3 md:gap-4 space-y-3 md:space-y-4">
+            <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5 gap-2 sm:gap-3 md:gap-4 space-y-2 sm:space-y-3 md:space-y-4">
               {imageLayouts.map((layout, i) => {
-                // Definir alturas basadas en el tamaño
+                // Definir alturas basadas en el tamaño (más pequeñas en móvil)
                 const heightClasses = {
-                  small: 'h-48 md:h-56',
-                  medium: 'h-64 md:h-80', 
-                  large: 'h-80 md:h-96',
-                  xlarge: 'h-96 md:h-[32rem]'
+                  small: 'h-40 sm:h-48 md:h-56',
+                  medium: 'h-52 sm:h-64 md:h-80', 
+                  large: 'h-64 sm:h-80 md:h-96',
+                  xlarge: 'h-80 sm:h-96 md:h-[32rem]'
                 };
 
                 return (
@@ -591,7 +596,7 @@ export default function IndustriasVintage() {
         {/* ==================== CONTACTO ==================== */}
         <motion.section 
           id="contacto"
-          className="relative px-6 md:px-10 lg:px-16 py-20 md:py-32 bg-gradient-to-b from-amber-950/20 to-transparent"
+          className="relative px-4 sm:px-6 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 lg:py-32 bg-gradient-to-b from-amber-950/20 to-transparent"
           variants={stagger}
           initial="hidden"
           whileInView="show"
@@ -599,17 +604,17 @@ export default function IndustriasVintage() {
         >
           <div className="max-w-5xl mx-auto text-center">
             <motion.div variants={fadeIn}>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent px-4">
                 ¿Listo para un espacio vintage único?
               </h2>
-              <p className="text-xl text-white/80 mb-12">
+              <p className="text-lg sm:text-xl text-white/80 mb-8 sm:mb-12 px-4">
                 Contáctanos y transforma tu hogar con el encanto del pasado
               </p>
               <motion.a
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-10 py-5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold text-lg hover:from-amber-500 hover:to-amber-600 transition-all shadow-2xl shadow-amber-600/40"
+                className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-10 py-4 sm:py-5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold text-base sm:text-lg hover:from-amber-500 hover:to-amber-600 transition-all shadow-2xl shadow-amber-600/40"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >

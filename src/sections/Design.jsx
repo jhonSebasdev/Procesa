@@ -321,6 +321,11 @@ export default function Design() {
 
   // ==================== EFFECTS ====================
   
+  // Scroll al inicio cuando se carga la página
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   // Detectar móvil para optimización
   useEffect(() => {
     const checkMobile = () => {
@@ -532,7 +537,7 @@ export default function Design() {
             {/* Botón de sonido flotante */}
             <motion.button
               onClick={toggleMute}
-              className="absolute bottom-8 left-8 z-20 p-4 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/30 transition-all shadow-xl"
+              className="absolute bottom-4 left-4 md:bottom-8 md:left-8 z-20 p-3 md:p-4 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/30 transition-all shadow-xl"
               aria-label={isMuted ? "Activar sonido" : "Desactivar sonido"}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -540,7 +545,7 @@ export default function Design() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.6 }}
             >
-              <span className="text-2xl">
+              <span className="text-xl md:text-2xl">
                 {isMuted ? "🔇" : "🔊"}
               </span>
             </motion.button>
@@ -550,14 +555,14 @@ export default function Design() {
           </div>
 
           {/* Contenido Hero */}
-          <div className="relative z-10 px-6 py-20 md:py-32">
+          <div className="relative z-10 px-4 sm:px-6 py-16 sm:py-20 md:py-32">
             <div className="max-w-5xl mx-auto text-center">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               >
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 leading-tight px-2">
                   <span className="bg-gradient-to-r from-purple-200 via-purple-400 to-purple-600 bg-clip-text text-transparent">
                     Transformamos tu hogar
                   </span>
@@ -566,24 +571,24 @@ export default function Design() {
                     En el espacio perfecto que siempre soñaste
                   </span>
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-purple-200 mb-4 font-semibold">
+                <p className="text-lg sm:text-xl md:text-2xl text-purple-200 mb-3 sm:mb-4 font-semibold px-2">
                   Procesa Design: Donde el diseño se encuentra con la perfección
                 </p>
-                <p className="text-base sm:text-lg text-white/70 max-w-3xl mx-auto mb-12">
+                <p className="text-sm sm:text-base md:text-lg text-white/70 max-w-3xl mx-auto mb-8 sm:mb-12 px-4">
                   Espacios únicos diseñados a tu medida. Calidad premium con financiamiento flexible para hacer realidad tu proyecto ideal.
                 </p>
               </motion.div>
 
               {/* CTAs */}
               <motion.div 
-                className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 sm:mb-16 px-4"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               >
                 <motion.a
                   href="#paquetes"
-                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold hover:from-purple-400 hover:to-purple-500 transition-all shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold hover:from-purple-400 hover:to-purple-500 transition-all shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 text-center"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -591,7 +596,7 @@ export default function Design() {
                 </motion.a>
                 <motion.a
                   href="#contacto"
-                  className="px-8 py-4 rounded-xl border-2 border-white/50 text-white font-bold hover:bg-white/10 backdrop-blur-sm transition-all"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl border-2 border-white/50 text-white font-bold hover:bg-white/10 backdrop-blur-sm transition-all text-center"
                   whileHover={{ scale: 1.05, y: -2, borderColor: 'rgba(255, 255, 255, 0.8)' }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -753,7 +758,7 @@ export default function Design() {
         {/* ==================== FINANCIAMIENTO ==================== */}
         <motion.section 
           id="financiamiento"
-          className="relative px-6 md:px-10 lg:px-16 py-20 md:py-28"
+          className="relative px-4 sm:px-6 md:px-10 lg:px-16 py-12 sm:py-16 md:py-20 lg:py-28"
           variants={stagger}
           initial="hidden"
           whileInView="show"
